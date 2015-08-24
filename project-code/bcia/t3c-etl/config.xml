@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <etl>
+    <jdbc-url>jdbc:oracle:thin:@192.168.2.155:1521:APDB2</jdbc-url>
+    <user>TEST_USER</user>
+    <password>orcl123</password>
+    <tables>
+      <tab id="1">
+        <name>LOG_SEC_DCSPNCK</name>
+        <field>mb_id</field>
+        <mode>append</mode>
+        <value>0</value>
+      </tab>
+      <tab id="2">
+        <name>LOG_SEC_SCOSPRSC</name>
+        <field>mb_id</field>
+        <mode>append</mode>
+        <value>0</value>
+      </tab>
+      <tab id="3">
+        <name>LOG_SEC_LKXXB</name>
+        <field>LAST_UPDATE_DATE</field>
+        <mode>lastmodified</mode>
+        <value>1900-01-01 00:00:00</value>
+      </tab>
+      <tab id="4">
+        <name>LOG_SEC_AJXXB</name>
+        <field>LAST_UPDATE_DATE</field>
+        <mode>lastmodified</mode>
+        <value>1900-01-01 00:00:00</value>
+      </tab>
+      <tab id="5">
+        <name>BARCODE_RECORD</name>
+        <field>id</field>
+        <mode>append</mode>
+        <value>0</value>
+      </tab>
+      <!--tab id="6">
+                <name>REALITY_FLIGHT_INFO<6name>
+                <field>OPERATION_DATE</field>
+                <mode>lastmodified</mode>
+                <value></value>
+            </tab-->
+    </tables>
+    <dest-db>apdb_staged</dest-db>
+  </etl>
+</config>
