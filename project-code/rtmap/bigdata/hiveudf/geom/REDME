@@ -1,0 +1,6 @@
+Add UDF to hive:
+--------------------------------------
+hadoop fs -mkdir /user/hive/udfs
+hadoop fs -put ./geom-0.0.1.jar /user/hive/udfs/
+hadoop fs -ls /user/hive/udfs
+hive -e "create function geom as 'cn.rtmap.bigdata.hiveudf.Geom' using jar 'hdfs:///user/hive/udfs/geom-0.0.1.jar'"
