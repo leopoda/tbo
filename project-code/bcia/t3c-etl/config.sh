@@ -1,16 +1,21 @@
 #!/bin/bash
 
-# export t3cfg=./config.xml
-export ORACLE_HOME=/u01/oracle
-export db_name=stagedb
-export hdfs_path=/bcia/${db_name}
-# export tns=APDB
+export xmlcmd=/usr/bin/xml
+export etlconf=./config.xml
 
+export ORACLE_HOME=/u01/oracle
 export HADOOP_HOME=/usr/iop/current/hadoop-client
 export HIVE_HOME=/usr/iop/current/hive-client
 export SQOOP_HOME=/usr/iop/current/sqoop-client
 
-export imp_usr=test_user
-export imp_passwd=orcl123
+# export imp_usr=apdb
+# export imp_passwd=apdb
 # export uri=jdbc:oracle:thin:@10.39.65.125:1521:ORA10G
-export uri=jdbc:oracle:thin:@10.39.65.118:1521:APDB
+
+## parse config values from xml config file
+export imp_usr=`${xmlcmd} sel -t -v /config/etl/user ${etlconf}`
+export imp_passwd=`${xmlcmd} sel -t -v /config/etl/password ${etlconf}`
+export uri=`${xmlcmd} sel -t -v /config/etl/jdbc-url ${etlconf}`
+
+export db_name=`${xmlcmd} sel -t -v /config/etl/dest-db ${etlconf}`
+export hdfs_path=/bcia/${db_name}

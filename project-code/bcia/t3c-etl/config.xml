@@ -1,47 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
   <etl>
-    <jdbc-url>jdbc:oracle:thin:@192.168.2.155:1521:APDB2</jdbc-url>
-    <user>TEST_USER</user>
+    <jdbc-url>jdbc:oracle:thin:@10.39.65.118:1521:APDB</jdbc-url>
+    <user>test_user</user>
     <password>orcl123</password>
     <tables>
       <tab id="1">
         <name>LOG_SEC_DCSPNCK</name>
-        <field>mb_id</field>
-        <mode>append</mode>
-        <value>0</value>
+        <field>MB_ID</field>
+        <value>72293500</value>
       </tab>
       <tab id="2">
         <name>LOG_SEC_SCOSPRSC</name>
-        <field>mb_id</field>
-        <mode>append</mode>
-        <value>0</value>
+        <field>MB_ID</field>
+        <value>72628800</value>
       </tab>
       <tab id="3">
         <name>LOG_SEC_LKXXB</name>
         <field>LAST_UPDATE_DATE</field>
-        <mode>lastmodified</mode>
-        <value>1900-01-01 00:00:00</value>
+        <value>2014-08-20 6:39:15</value>
       </tab>
       <tab id="4">
         <name>LOG_SEC_AJXXB</name>
         <field>LAST_UPDATE_DATE</field>
-        <mode>lastmodified</mode>
-        <value>1900-01-01 00:00:00</value>
+        <value>2014-08-20 00:53:45</value>
       </tab>
       <tab id="5">
         <name>BARCODE_RECORD</name>
-        <field>id</field>
-        <mode>append</mode>
-        <value>0</value>
+        <field>ID</field>
+        <value>31689500</value>
       </tab>
       <!--tab id="6">
-                <name>REALITY_FLIGHT_INFO<6name>
-                <field>OPERATION_DATE</field>
-                <mode>lastmodified</mode>
-                <value></value>
-            </tab-->
+        <name>REALITY_FLIGHT_INFO<6name>
+        <field>OPERATION_DATE</field>
+        <mode>lastmodified</mode>
+        <value></value>
+      </tab-->
     </tables>
-    <dest-db>apdb_staged</dest-db>
+    <dest-db>stagedb</dest-db>
   </etl>
 </config>

@@ -1,21 +1,11 @@
 #!/bin/bash
 
-# export t3cfg=./config.xml
-# export ORACLE_HOME=/u01/oracle
-# export db_name=stagedb
-# export hdfs_path=/bcia/${db_name}
-# # export tns=APDB
-# 
-# export HADOOP_HOME=/usr/iop/current/hadoop-client
-# export HIVE_HOME=/usr/iop/current/hive-client
-# export SQOOP_HOME=/usr/iop/current/sqoop-client
-# 
-# export imp_usr=apdb
-# export imp_passwd=apdb
-# export uri=jdbc:oracle:thin:@10.39.65.125:1521:ORA10G
 . ./config.sh
 
-tab_name=LOG_SEC_SCOSPRSC
+tab_name=`${xmlcmd} sel -t -v /config/etl/tables/tab[@id=2]/name ${etlconf}`
+tab_field=`${xmlcmd} sel -t -v /config/etl/tables/tab[@id=2]/field ${etlconf}`
+lastvalue=`${xmlcmd} sel -t -v /config/etl/tables/tab[@id=2]/value ${etlconf}`
+
 target_dir=${hdfs_path}/${tab_name}
 hive_tab=${db_name}.${tab_name}
 
@@ -31,5 +21,5 @@ $SQOOP_HOME/bin/sqoop import --hive-import \
                              --hive-table ${hive_tab} \
                              --num-mappers 1 \
                              --incremental append \
-                             --check-column mb_id \
-                             --last-value 72628800
+                             --check-column ${tab_field} \
+                             --last-value ${lastvalue}
