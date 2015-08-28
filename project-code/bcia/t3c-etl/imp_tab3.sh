@@ -25,4 +25,18 @@ $SQOOP_HOME/bin/sqoop import --hive-import \
                              --check-column ${tab_field} \
                              --last-value "${lastvalue}"
 
-## --query 'select sysid, lk_id ,lk_flight ,lk_date ,lk_seat ,lk_strt ,lk_dest ,lk_bdno ,lk_ename ,lk_cname ,lk_card ,lk_cardid ,lk_nation ,lk_sex ,lk_tel ,lk_resr ,lk_inf ,lk_infname ,lk_class ,lk_chkn ,lk_chkt ,lk_gateno ,lk_vip ,lk_insur ,lk_outtime ,lk_del ,ajxxb_id ,safe_time ,flgt_id ,file_name ,process_status ,last_update_date from log_sec_lkxxb where $CONDITIONS' \
+if [ $? -eq 0 ]; then
+  result=`${SQLCMD}<<EOF
+select nvl(to_char(max($tab_field), 'yyyy-MM-dd HH24:mi:ss'), '1900-01-01 00:00:00') as curr_max from ${tab_name};
+EOF`
+
+  # echo result: $result
+  if [ $? -eq 0 ]; then
+    ret=`echo $result | awk '{printf("%s %s", $3,$4);}'`
+	echo ret: $ret
+	echo last: $lastvalue
+    if [ "${ret}" != "${lastvalue}" ]; then 
+      ${xmlcmd} ed --inplace -u /config/etl/tables/tab[@id=3]/value -v "$ret" ${etlconf}
+    fi
+  fi
+fi 
