@@ -25,3 +25,16 @@ $SQOOP_HOME/bin/sqoop import --hive-import \
                              --incremental append \
                              --check-column ${tab_field} \
                              --last-value ${lastvalue}
+
+if [ $? -eq 0 ]; then
+  result=`${SQLCMD}<<EOF
+select nvl(max($tab_field),0) from ${tab_name};
+EOF`
+
+  if [ $? -eq 0 ]; then
+    ret=`echo $result |awk '{print $3}'`
+    if [ "${ret}" != "${lastvalue}" ]; then 
+      ./track-last.sh 1 ${ret}
+    fi
+  fi
+fi 

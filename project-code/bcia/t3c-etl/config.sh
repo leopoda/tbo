@@ -19,3 +19,6 @@ export uri=`${xmlcmd} sel -t -v /config/etl/jdbc-url ${etlconf}`
 
 export db_name=`${xmlcmd} sel -t -v /config/etl/dest-db ${etlconf}`
 export hdfs_path=/bcia/${db_name}
+
+export tns=`echo ${uri} | awk -F':' '{print $6;}'`
+export SQLCMD="$ORACLE_HOME/bin/sqlplus -s ${imp_usr}/${imp_passwd}@${tns}"
