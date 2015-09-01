@@ -10,6 +10,7 @@ lastvalue=`${xmlcmd} sel -t -v /config/etl/tables/tab[@id=3]/value ${etlconf}`
 target_dir=${hdfs_path}/${tab_name}
 hive_tab=${db_name}.${tab_name}
 
+echo info: incremental import data to hadoop from ${tns}.${imp_usr}.${tab_name}...
 result=`${SQLCMD}<<EOF
 select nvl(to_char(max($tab_field), 'yyyy-MM-dd HH24:mi:ss'), '1900-01-01 00:00:00') as curr_max from ${tab_name};
 EOF`
@@ -33,11 +34,17 @@ if [ $? -eq 0 ]; then
                                  --last-value "${lastvalue}"
     if [ $? -eq 0 ]; then
       ${xmlcmd} ed --inplace -u /config/etl/tables/tab[@id=3]/value -v "$ret" ${etlconf}
+    else
+      echo error: update config.xml failed
     fi
+  else
+    echo info: no more new data from sql table ${tab_name}
   fi
-
-  ## for debug
-  # echo debug: sql result: ${result}
-  # echo debug: ret: ${ret}
-  # echo debug: last value: ${lastvalue}
+else
+  echo error connect sql db failed
 fi
+
+## for debug
+echo info: sql result: ${result}
+echo info: curr value: ${ret}
+echo info: last value: ${lastvalue}
