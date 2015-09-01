@@ -17,8 +17,7 @@ EOF`
 if [ $? -eq 0 ]; then
   ret=`echo $result | awk '{printf("%s %s", $3,$4);}'`
   if [ "${ret}" != "${lastvalue}" ]; then 
-    $SQOOP_HOME/bin/sqoop import --hive-import \
-                                 --connect ${uri} \
+    $SQOOP_HOME/bin/sqoop import --connect ${uri} \
                                  --username ${imp_usr} \
                                  --password ${imp_passwd} \
                                  --table ${tab_name} \
@@ -26,13 +25,13 @@ if [ $? -eq 0 ]; then
                                  --fields-terminated-by '\t' \
                                  --null-string '\\N' \
                                  --null-non-string '\\N' \
-                                 --hive-table ${hive_tab} \
                                  --num-mappers 1 \
                                  --incremental append \
                                  --check-column ${tab_field} \
                                  --last-value "${lastvalue}"
     if [ $? -eq 0 ]; then
       ${xmlcmd} ed --inplace -u /config/etl/tables/tab[@id=4]/value -v "$ret" ${etlconf}
+      ./bgfs-ren.sh ${tab_name}
     fi
   fi
 
