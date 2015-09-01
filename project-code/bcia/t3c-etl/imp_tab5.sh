@@ -33,7 +33,7 @@ if [ $? -eq 0 ]; then
                                  --check-column ${tab_field} \
                                  --last-value ${lastvalue}
 
-    if [ "${ret}" != "${lastvalue}" ]; then 
+    if [ $? -eq 0 ]; then 
       ./track-last.sh 5 ${ret}
     fi
   fi
