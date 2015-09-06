@@ -1,0 +1,10 @@
+# start flume agent
+% rm -rf ~/.flume/file-channel/checkpoint/*
+% rm -rf ~/.flume/file-channel/data/*
+
+% export FLUME_HOME=/usr/hdp/current/flume-server
+% flume-ng agent --conf-file ./http2hdfs.properties --name agent1 --conf $FLUME_HOME/conf -Dflume.root.logger=INFO,console
+
+# how to transfer data to hdfs via http
+% curl -X POST -H 'Content-Type: application/json; charset=UTF-8' -d '[{"headers": {"ts" : "2015-08-21"}, "body" : "2015-08-21 23:01:23 test from curl"}]' http://datanode2:41414
+
