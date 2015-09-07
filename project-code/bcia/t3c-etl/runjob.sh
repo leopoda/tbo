@@ -7,10 +7,10 @@ ps_out=`ps -ef | grep $1 | grep -v 'grep' | grep -v $0`
 result=$(echo $ps_out | grep "$1")
 
 if [[ "$result" != "" ]];then
-    echo "Running, skipped"
+    echo "Running, skipped" >> ${JOB_DIR}/log/${JOB_LOG} 2>&1 
 else
     echo launch job...
-    nohup ${JOB_DIR}/$1 > ${JOB_DIR}/log/${JOB_LOG} 2>&1 &
+    nohup $1 >> ${JOB_DIR}/log/${JOB_LOG} 2>&1 &
 fi
 
 
