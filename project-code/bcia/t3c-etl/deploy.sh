@@ -4,6 +4,7 @@
 
 rm -rf $deploy_dir
 mkdir -p $deploy_dir
+mkdir -p $deploy_dir/log
 
 cp ./*.sh $deploy_dir
 cp ./*.xml $deploy_dir
