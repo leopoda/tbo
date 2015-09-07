@@ -8,6 +8,7 @@ export HADOOP_HOME=/usr/iop/current/hadoop-client
 export HIVE_HOME=/usr/iop/current/hive-client
 export SQOOP_HOME=/usr/iop/current/sqoop-client
 export BGFS_PREFIX=/mnt/bigfs
+export deploy_dir=/bcia/ingest
 
 # export imp_usr=apdb
 # export imp_passwd=apdb

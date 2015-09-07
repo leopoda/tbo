@@ -31,7 +31,7 @@
         <value>31689500</value>
       </tab>
       <!--tab id="6">
-        <name>REALITY_FLIGHT_INFO<6name>
+        <name>REALITY_FLIGHT_INFO<name>
         <field>OPERATION_DATE</field>
         <mode>lastmodified</mode>
         <value></value>

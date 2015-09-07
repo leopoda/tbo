@@ -1,0 +1,8 @@
+1. Prequirement:
+   1) Make sure the Oracle SQLPlus is installed and the path is configured correctly in config.sh
+   2) Make sure xmlstarlet is installed
+   3) Create a link for xmlstarlet: ln -s /usr/bin/xmlstarlet /usr/bin/xml
+
+2. How to run etl job in every 10 minutes
+   % crontab -e
+   */10 * * * * cd /bcia/ingest && /bcia/ingest/runjob.sh /bcia/ingest/data_ingest.sh
