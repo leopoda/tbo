@@ -1,0 +1,14 @@
+# for linux:
+#
+# test channel1
+% curl -X POST -d '[{"headers": {"type" : "pos", "bid" : "860100010030100003", "ts" : "2015-08-21"}, "body" : "123"}]' http://datanode1:41414
+
+# test channel2
+% curl -X POST -d '[{"headers": {"type" : "log", "tab" : "REALITY_FLIGHT_INFO", "ts" : "2015-08-21"}, "body" : "456"}]' http://datanode1:41414
+
+# for Windows
+#
+% curl -X POST -d "[{'headers': {'type' : 'pos', 'bid' : '860100010030100003', 'ts' : '2015-08-21'}, 'body' : '123'}]" http://datanode1:41414
+
+# test channel2
+% curl -X POST -d "[{'headers': {'type' : 'log', 'tab' : 'REALITY_FLIGHT_INFO', 'ts' : '2015-08-21'}, 'body' : '456'}]" http://datanode1:41414
