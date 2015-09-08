@@ -18,6 +18,29 @@ CREATE EXTERNAL TABLE IF NOT EXISTS barcode_record (
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 LOCATION '${hiveconf:hdfs_path}/BARCODE_RECORD';
 
+CREATE VIEW IF NOT EXISTS vw_barcode_record AS
+SELECT id,
+       trim(passager_name) passager_name,
+       CASE
+           WHEN (substr(trim(flight), 2, 1) RLIKE '([A-Z]+|[A-Z])') AND substr(trim(flight), 3, 2) = '00' THEN concat(substr(trim(flight), 1, 2), substr(trim(flight), 5))
+           WHEN (substr(trim(flight), 2, 1) RLIKE '([A-Z]+|[A-Z])') AND substr(trim(flight), 3, 1) = '0' THEN concat(substr(trim(flight), 1, 2), substr(trim(flight), 4))
+           WHEN length(trim(flight)) = 7 AND substr(trim(flight), length(trim(flight)), 1) = '0' THEN substr(trim(flight), 1, length(trim(flight))-1)
+       ELSE
+           regexp_replace(trim(flight), ' ', '')
+       END as flight,
+       trim(flight_date) flight_date,
+       trim(ship) ship,
+       trim(seat_no) seat_no,
+       trim(boarding_no) boarding_no,
+       trim(start_city) start_city,
+       trim(end_city) end_city,
+       trim(gate_name) gate_name,
+       trim(first_scan_time) first_scan_time,
+       trim(last_scan_time) last_scan_time,
+       scan_number ,
+       trim(error_code) error_code
+FROM barcode_record;
+
 CREATE EXTERNAL TABLE IF NOT EXISTS log_sec_scosprsc (
        SC_FFID					string,
        SC_BRDNO					string,
@@ -71,6 +94,35 @@ CREATE EXTERNAL TABLE IF NOT EXISTS log_sec_ajxxb (
        last_update_date        string)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 LOCATION '${hiveconf:hdfs_path}/LOG_SEC_AJXXB';
+
+CREATE VIEW IF NOT EXISTS vw_log_sec_ajxxb AS
+SELECT
+       trim(sysid) sysid,
+       ajxxb_id ,
+       lk_id ,
+       trim(safe_flag) safe_flag,
+       trim(safe_no) safe_no,
+       trim(safe_oper) safe_oper,
+       trim(safe_time) safe_time,
+       trim(bag_open) bag_open,
+       trim(safe_out) safe_out,
+       trim(safe_outno) safe_outno,
+       trim(safe_outtime) safe_outtime,
+       trim(file_name) file_name,
+       trim(lk_date) lk_date, 
+       CASE
+           WHEN (substr(trim(lk_flight), 2, 1) RLIKE '([A-Z]+|[A-Z])') AND substr(trim(lk_flight), 3, 2) = '00' THEN concat(substr(trim(lk_flight), 1, 2), substr(trim(lk_flight), 5))
+           WHEN (substr(trim(lk_flight), 2, 1) RLIKE '([A-Z]+|[A-Z])') AND substr(trim(lk_flight), 3, 1) = '0' THEN concat(substr(trim(lk_flight), 1, 2), substr(trim(lk_flight), 4))
+           WHEN length(trim(lk_flight)) = 7 AND substr(trim(lk_flight), length(trim(lk_flight)), 1) = '0' THEN substr(trim(lk_flight), 1, length(trim(lk_flight))-1)
+       ELSE
+           regexp_replace(trim(lk_flight), ' ', '')
+       END as lk_flight,
+       trim(flgt_id) flgt_id,
+       trim(process_status) process_status,
+       trim(last_update_date) last_update_date
+FROM log_sec_ajxxb;
+
+
 
 CREATE EXTERNAL TABLE IF NOT EXISTS log_sec_dcspnck (
        ck_ffid                 string,
@@ -147,3 +199,45 @@ CREATE EXTERNAL TABLE IF NOT EXISTS log_sec_lkxxb (
        last_update_date        string)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 LOCATION '${hiveconf:hdfs_path}/LOG_SEC_LKXXB';
+
+CREATE VIEW IF NOT EXISTS vw_log_sec_lkxxb AS
+SELECT 
+       trim(sysid) sysid,
+       trim(lk_id) lk_id,
+       CASE
+           WHEN (substr(trim(lk_flight), 2, 1) RLIKE '([A-Z]+|[A-Z])') AND substr(trim(lk_flight), 3, 2) = '00' THEN concat(substr(trim(lk_flight), 1, 2), substr(trim(lk_flight), 5))
+           WHEN (substr(trim(lk_flight), 2, 1) RLIKE '([A-Z]+|[A-Z])') AND substr(trim(lk_flight), 3, 1) = '0' THEN concat(substr(trim(lk_flight), 1, 2), substr(trim(lk_flight), 4))
+           WHEN length(trim(lk_flight)) = 7 AND substr(trim(lk_flight), length(trim(lk_flight)), 1) = '0' THEN substr(trim(lk_flight), 1, length(trim(lk_flight))-1)
+       ELSE
+           regexp_replace(trim(lk_flight), ' ', '')
+       END as lk_flight,
+       trim(lk_date) lk_date,
+       trim(lk_seat) lk_seat,
+       trim(lk_strt) lk_strt,
+       trim(lk_dest) lk_dest,
+       trim(lk_bdno) lk_bdno,
+       trim(lk_ename) lk_ename,
+       trim(lk_cname) lk_cname,
+       trim(lk_card) lk_card,
+       trim(lk_cardid) lk_cardid,
+       trim(lk_nation) lk_nation,
+       trim(lk_sex) lk_sex,
+       trim(lk_tel) lk_tel,
+       trim(lk_resr) lk_resr,
+       trim(lk_inf) lk_inf,
+       trim(lk_infname) lk_infname,
+       trim(lk_class) lk_class,
+       trim(lk_chkn) lk_chkn,
+       trim(lk_chkt) lk_chkt,
+       trim(lk_gateno) lk_gateno,
+       trim(lk_vip) lk_vip,
+       trim(lk_insur) lk_insur,
+       trim(lk_outtime) lk_outtime,
+       trim(lk_del) lk_del,
+       trim(ajxxb_id) ajxxb_id,
+       trim(safe_time) safe_time,
+       trim(flgt_id) flgt_id,
+       trim(file_name) file_name,
+       trim(process_status) process_status,
+       trim(last_update_date) last_update_date
+FROM log_sec_lkxxb;
