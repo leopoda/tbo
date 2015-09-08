@@ -30,7 +30,12 @@
         <field>ID</field>
         <value>31689500</value>
       </tab>
-      <!--tab id="6">
+      <tab id="6">
+        <name>APDB_PID</name>
+        <field></field>
+        <value></value>
+      </tab>
+      <!--tab id="7">
         <name>REALITY_FLIGHT_INFO<name>
         <field>OPERATION_DATE</field>
         <mode>lastmodified</mode>

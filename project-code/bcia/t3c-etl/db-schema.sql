@@ -241,3 +241,17 @@ SELECT
        trim(process_status) process_status,
        trim(last_update_date) last_update_date
 FROM log_sec_lkxxb;
+
+CREATE EXTERNAL TABLE IF NOT EXISTS apdb_pid (
+       cki_type string,
+       cki_sub_type string,
+       cki_pid string,
+       cki_cntr_nbr string,
+       cki_area string,
+       cki_terminal string,
+       cki_ew string,
+       cki_di string,
+       cki_iagt string,
+       last_update string)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
+LOCATION '${hiveconf:hdfs_path}/APDB_PID';
