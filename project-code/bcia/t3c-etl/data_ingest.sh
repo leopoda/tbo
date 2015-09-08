@@ -6,5 +6,6 @@
 ./imp_tab3.sh
 ./imp_tab4.sh
 ./imp_tab5.sh
+./imp_tab6.sh
 
 rm -rf ./*.java
