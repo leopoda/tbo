@@ -11,7 +11,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS barcode_record (
        start_city              string,
        end_city                string,
        gate_name               string,
-       first_scan_time         string,
+       first_scan_time         timestamp,
        last_scan_time          timestamp,
        scan_number             bigint,
        error_code              string)
@@ -35,8 +35,8 @@ SELECT id,
        trim(start_city) start_city,
        trim(end_city) end_city,
        trim(gate_name) gate_name,
-       trim(first_scan_time) first_scan_time,
-       trim(last_scan_time) last_scan_time,
+       first_scan_time,
+       last_scan_time,
        scan_number ,
        trim(error_code) error_code
 FROM barcode_record;
