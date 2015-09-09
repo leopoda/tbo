@@ -12,7 +12,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS barcode_record (
        end_city                string,
        gate_name               string,
        first_scan_time         string,
-       last_scan_time          string,
+       last_scan_time          timestamp,
        scan_number             bigint,
        error_code              string)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
