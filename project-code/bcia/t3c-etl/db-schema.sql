@@ -70,7 +70,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS log_sec_scosprsc (
        FLGT_ID					string,
        MB_ID					bigint,
        PROCESS_STATUS			string,
-       LAST_UPDATE_DATE	    	string)
+       LAST_UPDATE_DATE	    	timestamp)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 LOCATION '${hiveconf:hdfs_path}/LOG_SEC_SCOSPRSC';
 
@@ -81,7 +81,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS log_sec_ajxxb (
        safe_flag               string,
        safe_no                 string,
        safe_oper               string,
-       safe_time               string,
+       safe_time               timestamp,
        bag_open                string,
        safe_out                string,
        safe_outno              string,
@@ -91,7 +91,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS log_sec_ajxxb (
        lk_flight               string,
        flgt_id                 string,
        process_status          string,
-       last_update_date        string)
+       last_update_date        timestamp)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 LOCATION '${hiveconf:hdfs_path}/LOG_SEC_AJXXB';
 
@@ -103,7 +103,7 @@ SELECT
        trim(safe_flag) safe_flag,
        trim(safe_no) safe_no,
        trim(safe_oper) safe_oper,
-       trim(safe_time) safe_time,
+       safe_time,
        trim(bag_open) bag_open,
        trim(safe_out) safe_out,
        trim(safe_outno) safe_outno,
@@ -119,7 +119,7 @@ SELECT
        END as lk_flight,
        trim(flgt_id) flgt_id,
        trim(process_status) process_status,
-       trim(last_update_date) last_update_date
+       last_update_date
 FROM log_sec_ajxxb;
 
 
@@ -160,7 +160,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS log_sec_dcspnck (
        flgt_id                 string,
        mb_id                   bigint,
        process_status          string,
-       last_update_date        string)
+       last_update_date        timestamp)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 LOCATION '${hiveconf:hdfs_path}/LOG_SEC_DCSPNCK';
 
@@ -196,7 +196,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS log_sec_lkxxb (
        flgt_id                 string,
        file_name               string,
        process_status          string,
-       last_update_date        string)
+       last_update_date        timestamp)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 LOCATION '${hiveconf:hdfs_path}/LOG_SEC_LKXXB';
 
@@ -239,7 +239,7 @@ SELECT
        trim(flgt_id) flgt_id,
        trim(file_name) file_name,
        trim(process_status) process_status,
-       trim(last_update_date) last_update_date
+       last_update_date
 FROM log_sec_lkxxb;
 
 CREATE EXTERNAL TABLE IF NOT EXISTS apdb_pid (
@@ -252,6 +252,19 @@ CREATE EXTERNAL TABLE IF NOT EXISTS apdb_pid (
        cki_ew string,
        cki_di string,
        cki_iagt string,
-       last_update string)
+       last_update timestamp)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 LOCATION '${hiveconf:hdfs_path}/APDB_PID';
+
+CREATE VIEW IF NOT EXISTS vw_apdb_pid AS
+SELECT trim(cki_type) cki_type,
+       trim(cki_sub_type) cki_sub_type,
+       trim(cki_pid) cki_pid,
+       trim(cki_cntr_nbr) cki_cntr_nbr,
+       trim(cki_area) cki_area,
+       trim(cki_terminal) cki_terminal,
+       trim(cki_ew) cki_ew,
+       trim(cki_di) cki_di,
+       trim(cki_iagt) cki_iagt,
+       last_update
+FROM apdb_pid;
