@@ -6,3 +6,7 @@
 2. How to run etl job in every 10 minutes
    % crontab -e
    */10 * * * * cd /bcia/ingest && /bcia/ingest/runjob.sh /bcia/ingest/data_ingest.sh
+
+3. Verify job running progress
+   % ps -ef | grep data_ingest | grep -v 'grep'
+   % ps -ef | grep imp_tab | grep -v 'grep'
