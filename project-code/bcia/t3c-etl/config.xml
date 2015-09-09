@@ -8,27 +8,27 @@
       <tab id="1">
         <name>LOG_SEC_DCSPNCK</name>
         <field>MB_ID</field>
-        <value>72293500</value>
+        <value>0</value>
       </tab>
       <tab id="2">
         <name>LOG_SEC_SCOSPRSC</name>
         <field>MB_ID</field>
-        <value>72628800</value>
+        <value>0</value>
       </tab>
       <tab id="3">
         <name>LOG_SEC_LKXXB</name>
         <field>LAST_UPDATE_DATE</field>
-        <value>2014-08-20 6:39:15</value>
+        <value>1900-01-01 00:00:00</value>
       </tab>
       <tab id="4">
         <name>LOG_SEC_AJXXB</name>
         <field>LAST_UPDATE_DATE</field>
-        <value>2014-08-20 00:53:45</value>
+        <value>1900-01-01 00:00:00</value>
       </tab>
       <tab id="5">
         <name>BARCODE_RECORD</name>
         <field>ID</field>
-        <value>31689500</value>
+        <value>31560830</value>
       </tab>
       <tab id="6">
         <name>APDB_PID</name>
