@@ -10,7 +10,7 @@ set hive.exec.max.dynamic.partitions=10000;
 use stagedb;
 "
 
-query="insert overwrite table queue.gat partition(scan_date, scan_hour, scan_minute) 
+query="insert overwrite table queue.gat partition(lk_date, lk_hour, lk_minute) 
 select b.lk_id, 
        -- b.lk_flight, 
        -- b.last_update_date, 
@@ -18,8 +18,8 @@ select b.lk_id,
        -- a.flight, 
        -- a.boarding_no, 
        a.last_scan_time,
-       to_date(a.last_scan_time) scan_date,
-       hour(a.last_scan_time) scan_hour,
+       to_date(a.last_scan_time) lk_date,
+       hour(a.last_scan_time) lk_hour,
        CASE
            WHEN minute(a.last_scan_time)>=0 and minute(a.last_scan_time) <= 10 THEN 1
            WHEN minute(a.last_scan_time)>10 and minute(a.last_scan_time) <= 20 THEN 2
@@ -27,7 +27,7 @@ select b.lk_id,
            WHEN minute(a.last_scan_time)>30 and minute(a.last_scan_time) <= 40 THEN 4
            WHEN minute(a.last_scan_time)>40 and minute(a.last_scan_time) <= 50 THEN 5
            WHEN minute(a.last_scan_time)>50 and minute(a.last_scan_time) <= 59 THEN 6
-       END scan_minute
+       END lk_minute
        -- ,c.cki_type
 from vw_barcode_record a
 left join vw_log_sec_lkxxb b
