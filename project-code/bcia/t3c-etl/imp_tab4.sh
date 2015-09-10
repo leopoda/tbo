@@ -10,6 +10,7 @@ lastvalue=`${xmlcmd} sel -t -v /config/etl/tables/tab[@id=4]/value ${etlconf}`
 target_dir=${hdfs_path}/${tab_name}
 hive_tab=${db_name}.${tab_name}
 
+echo info: incremental import data to hadoop from ${tns}.${imp_usr}.${tab_name}...
 result=`${SQLCMD}<<EOF
 select nvl(to_char(max($tab_field), 'yyyy-MM-dd HH24:mi:ss'), '1900-01-01 00:00:00') as curr_max from ${tab_name};
 EOF`
