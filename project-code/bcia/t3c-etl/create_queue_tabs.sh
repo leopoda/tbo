@@ -2,7 +2,7 @@
 . ./config.sh
 
 export db_name=queue
-export hdfs_path=${BGFS_PREFIX}/bcia/${db_name}
+export hdfs_path=/bcia/${db_name}
 
 $HADOOP_HOME/bin/hadoop fs -mkdir -p $hdfs_path
 $HADOOP_HOME/bin/hadoop fs -mkdir -p $hdfs_path/gat
