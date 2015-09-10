@@ -36,7 +36,7 @@ left join vw_apdb_pid c
   on b.lk_chkn = cki_pid
 where (a.last_scan_time between '2014-08-17 06:00:00' and '2014-08-17 06:10:00') and
       a.last_scan_time is not null and 
-      -- c.cki_type <> '其他值机' and 
+      -- c.cki_type <> '鍏朵粬鍊兼満' and 
       b.lk_id is not null;
 -- limit 50;
 "
