@@ -1,6 +1,5 @@
 #!/bin/bash
 
-./create_tabs.sh
 ./imp_tab1.sh
 ./imp_tab2.sh
 ./imp_tab3.sh
