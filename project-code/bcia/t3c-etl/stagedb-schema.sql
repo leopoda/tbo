@@ -268,3 +268,11 @@ SELECT trim(cki_type) cki_type,
        trim(cki_iagt) cki_iagt,
        last_update
 FROM apdb_pid;
+
+CREATE TABLE IF NOT EXISTS gat (
+       lk_id          string,
+       last_scan_time string)
+PARTITIONED BY (lk_date string, lk_hour smallint, lk_segmt smallint)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t';
+-- LOCATION '${hiveconf:hdfs_path}/gat';
+
