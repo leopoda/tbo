@@ -77,7 +77,7 @@ LOCATION '${hiveconf:hdfs_path}/LOG_SEC_SCOSPRSC';
 CREATE EXTERNAL TABLE IF NOT EXISTS log_sec_ajxxb (
        sysid                   string,
        ajxxb_id                bigint,
-       lk_id                   bigint,
+       lk_id                   string,
        safe_flag               string,
        safe_no                 string,
        safe_oper               string,
@@ -99,7 +99,7 @@ CREATE VIEW IF NOT EXISTS vw_log_sec_ajxxb AS
 SELECT
        trim(sysid) sysid,
        ajxxb_id ,
-       lk_id ,
+       trim(lk_id) ,
        trim(safe_flag) safe_flag,
        trim(safe_no) safe_no,
        trim(safe_oper) safe_oper,
@@ -288,5 +288,9 @@ CREATE TABLE IF NOT EXISTS gat (
        last_scan_time string)
 PARTITIONED BY (lk_date string, lk_hour smallint, lk_segmt smallint)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t';
--- LOCATION '${hiveconf:hdfs_path}/gat';
 
+CREATE TABLE IF NOT EXISTS sck (
+       lk_id          string,
+       safe_time      string)
+PARTITIONED BY (lk_date string, lk_hour smallint, lk_segmt smallint)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t';
