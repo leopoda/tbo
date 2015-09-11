@@ -103,7 +103,21 @@ SELECT
        trim(safe_flag) safe_flag,
        trim(safe_no) safe_no,
        trim(safe_oper) safe_oper,
-       trim(safe_time) safe_time,
+       case
+           when trim(safe_time) is not null then concat(substr(trim(safe_time), 1, 4), 
+                                                        '-',
+                                                        substr(trim(safe_time), 5, 2),
+                                                        '-',
+                                                        substr(trim(safe_time), 7, 2),
+                                                        ' ',
+                                                        substr(trim(safe_time), 9, 2),
+                                                        ':',
+                                                        substr(trim(safe_time), 11, 2),
+                                                        ':',
+                                                        substr(trim(safe_time), 13, 2))
+       else
+           null
+       end safe_time,
        trim(bag_open) bag_open,
        trim(safe_out) safe_out,
        trim(safe_outno) safe_outno,
