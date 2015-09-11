@@ -3,7 +3,7 @@
 . ./config.sh
 
 # end_dt=$1
-end_dt='2014-08-17 06:17:00'
+end_dt='2014-08-15 08:20:00'
 
 last_ten_min_dt=$(( `date -d "${end_dt}" '+%s'` - ( 10 * 60 ) ))
 start_dt=`date -d "@$last_ten_min_dt" '+%Y-%m-%d %H:%M:%S'`
@@ -18,14 +18,14 @@ select b.lk_id,
        a.last_scan_time,
        to_date(a.last_scan_time) lk_date,
        hour(a.last_scan_time) lk_hour,
-       CASE
-           WHEN minute(a.last_scan_time)>=0  and minute(a.last_scan_time) <= 9  THEN 1
-           WHEN minute(a.last_scan_time)>=10 and minute(a.last_scan_time) <= 19 THEN 2
-           WHEN minute(a.last_scan_time)>=20 and minute(a.last_scan_time) <= 29 THEN 3
-           WHEN minute(a.last_scan_time)>=30 and minute(a.last_scan_time) <= 39 THEN 4
-           WHEN minute(a.last_scan_time)>=40 and minute(a.last_scan_time) <= 49 THEN 5
-           WHEN minute(a.last_scan_time)>=50 and minute(a.last_scan_time) <= 59 THEN 6
-       END lk_segmt
+       case
+           when minute(a.last_scan_time)>=0  and minute(a.last_scan_time) <= 9  THEN 1
+           when minute(a.last_scan_time)>=10 and minute(a.last_scan_time) <= 19 THEN 2
+           when minute(a.last_scan_time)>=20 and minute(a.last_scan_time) <= 29 THEN 3
+           when minute(a.last_scan_time)>=30 and minute(a.last_scan_time) <= 39 THEN 4
+           when minute(a.last_scan_time)>=40 and minute(a.last_scan_time) <= 49 THEN 5
+           when minute(a.last_scan_time)>=50 and minute(a.last_scan_time) <= 59 THEN 6
+       end lk_segmt
        -- ,c.cki_type
 from vw_barcode_record a
 left join vw_log_sec_lkxxb b
