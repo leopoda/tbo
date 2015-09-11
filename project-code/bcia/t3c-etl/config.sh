@@ -25,3 +25,11 @@ export bgfs_path=${BGFS_PREFIX}/bcia/${db_name}
 
 export tns=`echo ${uri} | awk -F':' '{print $6;}'`
 export SQLCMD="$ORACLE_HOME/bin/sqlplus -s ${imp_usr}/${imp_passwd}@${tns}"
+
+export hivecfg="
+use $db_name;
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nonstrict;
+set hive.exec.max.dynamic.partitions.pernode=2000;
+set hive.exec.max.dynamic.partitions=10000;
+"

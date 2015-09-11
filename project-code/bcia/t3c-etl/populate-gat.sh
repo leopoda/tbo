@@ -4,16 +4,9 @@
 
 # end_dt=$1
 end_dt='2014-08-17 06:17:00'
+
 last_ten_min_dt=$(( `date -d "${end_dt}" '+%s'` - ( 10 * 60 ) ))
 start_dt=`date -d "@$last_ten_min_dt" '+%Y-%m-%d %H:%M:%S'`
-
-hivecfg="
-use $db_name;
-set hive.exec.dynamic.partition=true;
-set hive.exec.dynamic.partition.mode=nonstrict;
-set hive.exec.max.dynamic.partitions.pernode=2000;
-set hive.exec.max.dynamic.partitions=10000;
-"
 
 query="insert overwrite table gat partition(lk_date, lk_hour, lk_segmt) 
 select b.lk_id, 
@@ -39,7 +32,6 @@ left join vw_log_sec_lkxxb b
   on a.flight = b.lk_flight and a.boarding_no = b.lk_bdno 
 left join vw_apdb_pid c
   on b.lk_chkn = cki_pid
--- where (a.last_scan_time between '2014-08-17 06:00:00' and '2014-08-17 06:10:00') and
 where (a.last_scan_time between '${start_dt}' and '${end_dt}') and
       a.last_scan_time is not null and 
       b.lk_id is not null;

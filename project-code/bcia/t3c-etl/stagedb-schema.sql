@@ -99,7 +99,7 @@ CREATE VIEW IF NOT EXISTS vw_log_sec_ajxxb AS
 SELECT
        trim(sysid) sysid,
        ajxxb_id ,
-       trim(lk_id) ,
+       trim(lk_id) lk_id,
        trim(safe_flag) safe_flag,
        trim(safe_no) safe_no,
        trim(safe_oper) safe_oper,

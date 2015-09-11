@@ -13,3 +13,7 @@ cp ./*.xml $deploy_dir
 
 rm -rf $deploy_dir/deploy.sh
 rm -rf $deploy_dir/trunc_tabs.sh
+rm -rf $deploy_dir/tab-max.sh
+
+rm -rf $deploy_dir/imp_tab1.sh
+rm -rf $deploy_dir/imp_tab2.sh
