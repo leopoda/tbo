@@ -32,7 +32,7 @@ left join vw_log_sec_lkxxb b
   on a.flight = b.lk_flight and a.boarding_no = b.lk_bdno 
 left join vw_apdb_pid c
   on b.lk_chkn = cki_pid
-where (a.last_scan_time between '${start_dt}' and '${end_dt}') and
+where (a.last_scan_time > '${start_dt}' and a.last_scan_time <= '${end_dt}') and
       a.last_scan_time is not null and 
       b.lk_id is not null;
 "

@@ -21,7 +21,7 @@ select lk_id,
            when minute(safe_time)>=50 and minute(safe_time) <= 59 then 6
        end lk_segmt
 from vw_log_sec_ajxxb
-where (safe_time between '${start_dt}' and '${end_dt}') and 
+where (safe_time > '${start_dt}' and safe_time <= '${end_dt}') and 
       safe_time is not null;
 "
 
