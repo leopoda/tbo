@@ -104,20 +104,25 @@ SELECT
        trim(safe_no) safe_no,
        trim(safe_oper) safe_oper,
        case
-           when trim(safe_time) is not null then concat(substr(trim(safe_time), 1, 4), 
-                                                        '-',
-                                                        substr(trim(safe_time), 5, 2),
-                                                        '-',
-                                                        substr(trim(safe_time), 7, 2),
-                                                        ' ',
-                                                        substr(trim(safe_time), 9, 2),
-                                                        ':',
-                                                        substr(trim(safe_time), 11, 2),
-                                                        ':',
-                                                        substr(trim(safe_time), 13, 2))
+           when trim(safe_time) is not null then from_unixtime(unix_timestamp(trim(safe_time), 'yyyyMMddHHmmss'))
        else
            null
        end safe_time,
+       -- case
+       --     when trim(safe_time) is not null then concat(substr(trim(safe_time), 1, 4), 
+       --                                                  '-',
+       --                                                  substr(trim(safe_time), 5, 2),
+       --                                                  '-',
+       --                                                  substr(trim(safe_time), 7, 2),
+       --                                                  ' ',
+       --                                                  substr(trim(safe_time), 9, 2),
+       --                                                  ':',
+       --                                                  substr(trim(safe_time), 11, 2),
+       --                                                  ':',
+       --                                                  substr(trim(safe_time), 13, 2))
+       -- else
+       --     null
+       -- end safe_time,
        trim(bag_open) bag_open,
        trim(safe_out) safe_out,
        trim(safe_outno) safe_outno,
