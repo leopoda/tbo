@@ -10,3 +10,6 @@
 3. Verify job running progress
    % ps -ef | grep data_ingest | grep -v 'grep'
    % ps -ef | grep imp_tab | grep -v 'grep'
+
+4. For individually testing the scripts like populate-*.sh:
+   % export start_dt=`./calc-start-dt.sh` gat && ./populate-gat.sh '2014-08-15 08:30:00'
