@@ -40,4 +40,4 @@ where (a.last_scan_time > '${start_dt}' and a.last_scan_time <= '${end_dt}') and
 "
 
 $HIVE_HOME/bin/hive -S -e "$hivecfg$query"
-
+echo `date '+%Y-%m-%d %H:%M:%S'` info: populating completed
