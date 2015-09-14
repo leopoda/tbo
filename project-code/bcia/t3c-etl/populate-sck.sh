@@ -11,7 +11,7 @@ query="insert overwrite table sck partition(lk_date, lk_hour, lk_segmt)
 select lk_id,
        safe_time,
        to_date(safe_time) lk_date,
-       hour(safe_time) lk_hour,
+       lpad(hour(safe_time), 2, '0') lk_hour,
        case
            when minute(safe_time)>=0  and minute(safe_time) <= 9  then 1
            when minute(safe_time)>=10 and minute(safe_time) <= 19 then 2

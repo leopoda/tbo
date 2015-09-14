@@ -17,7 +17,7 @@ select b.lk_id,
        -- a.boarding_no, 
        a.last_scan_time,
        to_date(a.last_scan_time) lk_date,
-       hour(a.last_scan_time) lk_hour,
+       lpad(hour(a.last_scan_time), 2, '0') lk_hour,
        case
            when minute(a.last_scan_time)>=0  and minute(a.last_scan_time) <= 9  THEN 1
            when minute(a.last_scan_time)>=10 and minute(a.last_scan_time) <= 19 THEN 2

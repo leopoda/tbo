@@ -297,5 +297,5 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t';
 CREATE TABLE IF NOT EXISTS sck (
        lk_id          string,
        safe_time      string)
-PARTITIONED BY (lk_date string, lk_hour smallint, lk_segmt smallint)
+PARTITIONED BY (lk_date string, lk_hour string, lk_segmt smallint)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t';
