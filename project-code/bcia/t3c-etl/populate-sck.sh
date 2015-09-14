@@ -7,7 +7,7 @@
 # last_ten_min_dt=$(( `date -d "${end_dt}" '+%s'` - ( 10 * 60 ) ))
 # start_dt=`date -d "@$last_ten_min_dt" '+%Y-%m-%d %H:%M:%S'`
 
-echo info: start_dt=$start_dt end_dt=$end_dt
+echo `date '+%Y-%m-%d %H:%M:%S'` info: $0 start_dt=$start_dt end_dt=$end_dt
 
 query="insert overwrite table sck partition(lk_date, lk_hour, lk_segmt) 
 select lk_id,
