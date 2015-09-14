@@ -10,7 +10,12 @@
 3. Verify job running progress
    % ps -ef | grep data_ingest | grep -v 'grep'
    % ps -ef | grep imp_tab | grep -v 'grep'
+   % ps -ef | grep populate | grep -v 'grep'
 
 4. For individually testing the scripts like populate-*.sh:
    % export start_dt=`./calc-start-dt.sh gat` && export end_dt=`./calc-end-dt.sh` && ./populate-gat.sh
    % export start_dt=`./calc-start-dt.sh sck` && export end_dt=`./calc-end-dt.sh` && ./populate-sck.sh
+
+   # if you want to specify the starting date to avoid huge data issue while first populating:
+   % export start_dt=`echo 2015-08-15 00:00:00` && export end_dt=`./calc-end-dt.sh` && ./populate-gat.sh
+   % export start_dt=`echo 2015-08-15 00:00:00` && export end_dt=`./calc-end-dt.sh` && ./populate-sck.sh
