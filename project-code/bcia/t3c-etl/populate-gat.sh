@@ -8,7 +8,7 @@
 # last_ten_min_dt=$(( `date -d "${end_dt}" '+%s'` - ( 10 * 60 ) ))
 # start_dt=`date -d "@$last_ten_min_dt" '+%Y-%m-%d %H:%M:%S'`
 
-echo `date '+%Y-%m-%d %H:%M:%S'` info: $0 start_dt=$start_dt end_dt=$end_dt
+echo `date '+%Y-%m-%d %H:%M:%S'` info: $0 start_dt='$start_dt' end_dt='$end_dt'
 
 query="insert overwrite table gat partition(lk_date, lk_hour, lk_segmt) 
 select b.lk_id, 
@@ -36,8 +36,9 @@ left join vw_apdb_pid c
   on b.lk_chkn = cki_pid
 where (a.last_scan_time > '${start_dt}' and a.last_scan_time <= '${end_dt}') and
       a.last_scan_time is not null and 
-      b.lk_id is not null;
+      b.lk_id is not null and 
+      c.cki_type is not null;
 "
 
 $HIVE_HOME/bin/hive -S -e "$hivecfg$query"
-echo `date '+%Y-%m-%d %H:%M:%S'` info: populating completed
+echo `date '+%Y-%m-%d %H:%M:%S'` info: populating of table gat completed

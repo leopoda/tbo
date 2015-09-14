@@ -286,7 +286,8 @@ SELECT trim(cki_type) cki_type,
        trim(cki_di) cki_di,
        trim(cki_iagt) cki_iagt,
        last_update
-FROM apdb_pid;
+FROM apdb_pid
+WHERE trim(cki_type) <> '其他值机';
 
 CREATE TABLE IF NOT EXISTS gat (
        lk_id          string,

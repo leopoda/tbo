@@ -28,4 +28,4 @@ where (safe_time > '${start_dt}' and safe_time <= '${end_dt}') and
 "
 
 $HIVE_HOME/bin/hive -S -e "$hivecfg$query"
-echo `date '+%Y-%m-%d %H:%M:%S'` info: populating completed
+echo `date '+%Y-%m-%d %H:%M:%S'` info: populating of table sck completed
