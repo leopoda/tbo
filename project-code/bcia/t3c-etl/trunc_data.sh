@@ -8,3 +8,6 @@ $HADOOP_HOME/bin/hadoop fs -rm -r -skipTrash $hdfs_path/LOG_SEC_AJXXB/*
 $HADOOP_HOME/bin/hadoop fs -rm -r -skipTrash $hdfs_path/BARCODE_RECORD/*
 $HADOOP_HOME/bin/hadoop fs -rm -r -skipTrash $hdfs_path/APDB_PID/*
 $HADOOP_HOME/bin/hadoop fs -rm -r -skipTrash $hdfs_path/APDB_PID_BAK/*
+
+$HADOOP_HOME/bin/hdfs dfs -rm -r -skipTrash $hdfs_path/gat/*
+$HADOOP_HOME/bin/hdfs dfs -rm -r -skipTrash $hdfs_path/sck/*
