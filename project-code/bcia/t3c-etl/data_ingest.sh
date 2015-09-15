@@ -7,7 +7,7 @@
 ./imp_tab5.sh >> log/log_barcode-`date +%Y%m%d`.txt 2>&1 &
 ./imp_tab6.sh >> log/log_apdb_pid-`date +%Y%m%d`.txt 2>&1 &
 
-sleep 1
+sleep 10
 while true
 do
   result=`ps -ef | grep imp_tab | head -n 1 |grep -v 'grep'`
@@ -20,7 +20,7 @@ do
   fi
 done
 
-sleep 1
+sleep 30
 while true
 do
   result=`ps -ef | grep populate | head -n 1 | grep -v 'grep'`
