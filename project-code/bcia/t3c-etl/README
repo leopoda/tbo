@@ -19,3 +19,9 @@
    # if you want to specify the starting date to avoid huge data issue while first populating:
    % export start_dt=`echo 2015-08-15 00:00:00` && export end_dt=`./calc-end-dt.sh` && ./populate-gat.sh
    % export start_dt=`echo 2015-08-15 00:00:00` && export end_dt=`./calc-end-dt.sh` && ./populate-sck.sh
+
+5. Get threshold values for all the tables specified in config.xml:
+   % ./tab-max.sh
+
+   # Individually for barcode_record:
+   % ./barcode-max.sh "2015-05-01 00:00:00"
