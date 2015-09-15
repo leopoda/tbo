@@ -27,6 +27,7 @@ do
   if [ "$result" != "" ]; then
     sleep 1
   else
+    echo `date '+%Y-%m-%d %H:%M:%S'` info: job finished
     break
   fi
 done
