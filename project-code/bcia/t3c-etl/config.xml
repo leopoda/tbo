@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
   <etl>
-    <jdbc-url>jdbc:oracle:thin:@10.39.65.118:1521:APDB</jdbc-url>
-    <user>test_user</user>
-    <password>orcl123</password>
+    <!--jdbc-url>jdbc:oracle:thin:@10.39.65.118:1521:APDB</jdbc-url-->
+    <!--user>test_user</user-->
+    <!--password>orcl123</password-->
+    <jdbc-url>jdbc:oracle:thin:@10.39.65.125:1521:ORA10G</jdbc-url>
+    <user>apdb</user>
+    <password>apdb</password>
     <tables>
       <tab id="1">
         <name>LOG_SEC_DCSPNCK</name>
@@ -18,17 +21,17 @@
       <tab id="3">
         <name>LOG_SEC_LKXXB</name>
         <field>LAST_UPDATE_DATE</field>
-        <value>1900-01-01 00:00:00</value>
+        <value>2015-05-01 00:00:00</value>
       </tab>
       <tab id="4">
         <name>LOG_SEC_AJXXB</name>
         <field>LAST_UPDATE_DATE</field>
-        <value>1900-01-01 00:00:00</value>
+        <value>2015-05-01 00:00:00</value>
       </tab>
       <tab id="5">
         <name>BARCODE_RECORD</name>
         <field>ID</field>
-        <value>31560830</value>
+        <value>43204307</value>
       </tab>
       <tab id="6">
         <name>APDB_PID</name>
