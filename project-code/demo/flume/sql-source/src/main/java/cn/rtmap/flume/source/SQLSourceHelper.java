@@ -33,16 +33,15 @@ import org.slf4j.LoggerFactory;
  */
 
 public class SQLSourceHelper {
-
     private static final Logger LOG = LoggerFactory.getLogger(SQLSourceHelper.class);
-    
+
     private File file,directory;
-    private int runQueryDelay, batchSize, maxRows; //, currentIndex;
+    private int runQueryDelay, batchSize, maxRows;
     private String statusFilePath, statusFileName, connectionURL, table,
     columnsToSelect, user, password, customQuery, query, hibernateDialect,
     hibernateDriver;
 
-    private String currentIndex, checkColumn, columnType;
+    private String currentIndex, checkColumn, columnType, lastValueQuery;
 
     private static final String DEFAULT_STATUS_DIRECTORY = "/var/lib/flume";
     private static final int DEFAULT_QUERY_DELAY = 10000;
@@ -56,7 +55,6 @@ public class SQLSourceHelper {
      * @param context Flume source context, contains the properties from configuration file
      */
     public SQLSourceHelper(Context context){
-        
         statusFilePath = context.getString("status.file.path", DEFAULT_STATUS_DIRECTORY);
         statusFileName = context.getString("status.file.name");
         connectionURL = context.getString("connection.url");
@@ -73,44 +71,33 @@ public class SQLSourceHelper {
         maxRows = context.getInteger("max.rows",DEFAULT_MAX_ROWS);
         hibernateDialect = context.getString("hibernate.dialect");
         hibernateDriver = context.getString("hibernate.connection.driver_class");
-        
+        lastValueQuery = context.getString("last.value.query");
+
         checkMandatoryProperties();
-                
+
         if (!(isStatusDirectoryCreated())) {
             createDirectory();
         }
-        
+
         file = new File(statusFilePath + "/" + statusFileName);
-
-        if (columnType.toLowerCase().trim().equals("bigint")) {
-            currentIndex = getStatusFileIndex("0");
-        } else if (columnType.toLowerCase().trim().equals("string")) {
-            currentIndex = getStatusFileIndex("1900-01-01 00:00:00");
-        }
-
-        query = buildQuery();
     }
-    
-    
+
     private String buildQuery() {
-        
         if (customQuery == null) {
-            if (columnType.toLowerCase().trim().equals("string")) {
-                return String.format("SELECT %s FROM %s WHERE %s > '%s'", columnsToSelect, table, checkColumn, currentIndex);
-            } else if (columnType.toLowerCase().trim().equals("bigint")) {
-				
-				String str = String.format("SELECT %s FROM %s WHERE %s > %s", columnsToSelect, table, checkColumn, currentIndex);
-				LOG.info("sql query {} ...", str);
+            if (columnType.toLowerCase().trim().equals("bigint")) {
+                currentIndex = getStatusFileIndex("0");
+                String str = String.format("SELECT %s FROM %s WHERE %s > %s", columnsToSelect, table, checkColumn, currentIndex);
                 return str;
+            } else {
+                currentIndex = getStatusFileIndex("1900-01-01 00:00:00");
+                return String.format("SELECT %s FROM %s WHERE %s > '%s'", columnsToSelect, table, checkColumn, currentIndex);
             }
-            return "";
-            // return "SELECT " + columnsToSelect + " FROM " + table + " where ";
         }
-        else
-            return customQuery;
+        else {
+            return String.format(customQuery, currentIndex);
+        }
     }
 
-    
     private boolean isStatusFileCreated(){
         
         return file.exists() && !file.isDirectory() ? true: false;
@@ -119,7 +106,7 @@ public class SQLSourceHelper {
     private boolean isStatusDirectoryCreated() {
         return directory.exists() && !directory.isFile() ? true: false;
     }
-    
+
     /**
      * Converter from a List of Object List to a List of String arrays <p>
      * Useful for csvWriter
@@ -127,16 +114,14 @@ public class SQLSourceHelper {
      * @return A list of String arrays, ready for csvWriter.writeall method
      */
     public List<String[]> getAllRows(List<List<Object>> queryResult){
-        
         List<String[]> allRows = new ArrayList<String[]>();
-        
         if (queryResult == null || queryResult.isEmpty())
             return allRows;
-        
+
         String[] row=null;
-        
+
         for (int i=0; i<queryResult.size();i++)
-        {    
+        {
             List<Object> rawRow = queryResult.get(i);
             row = new String[rawRow.size()];
             for (int j=0; j< rawRow.size(); j++){
@@ -147,16 +132,17 @@ public class SQLSourceHelper {
             }
             allRows.add(row);
         }
-        
+
         return allRows;
     }
 
     /**
      * Update status file with last read row index    
      */
-    public void updateStatusFile() {
+    public void updateStatusFile(String indexValue) {
         /* Status file creation or update */
         try {
+            currentIndex = indexValue;
             Writer writer = new FileWriter(file,false);
             writer.write(connectionURL+"	");
             writer.write(table+"	");
@@ -167,11 +153,10 @@ public class SQLSourceHelper {
         }
     }
 
-    private String getStatusFileIndex(String configuredStartValue) {
-        
+    private String getStatusFileIndex(String defaultStartValue) {
         if (!isStatusFileCreated()) {
             LOG.info("Status file not created, using start value from config file");
-            return configuredStartValue;
+            return defaultStartValue;
         }
         else{
             try {
@@ -188,16 +173,16 @@ public class SQLSourceHelper {
                     LOG.warn(statusFilePath + "/" + statusFileName + " corrupt!!! Deleting it.");
                     reader.close();
                     deleteStatusFile();
-                    return configuredStartValue;
+                    return defaultStartValue;
                 }
             } catch (NumberFormatException | IOException e) {
                 LOG.error("Corrupt index value in file!!! Deleting it.", e);
                 deleteStatusFile();
-                return configuredStartValue;
+                return defaultStartValue;
             }
         }
     }
-    
+
     private void deleteStatusFile() {
         if (file.delete()){
             LOG.info("Deleted status file: {}",file.getAbsolutePath());
@@ -205,7 +190,7 @@ public class SQLSourceHelper {
             LOG.warn("Error deleting file: {}",file.getAbsolutePath());
         }
     }
-    
+
     private void checkMandatoryProperties() {
         
         if (statusFileName == null){
@@ -228,7 +213,7 @@ public class SQLSourceHelper {
     /*
      * @return String connectionURL
      */
-    String getConnectionURL() {            
+    String getConnectionURL() {
         return connectionURL;
     }
 
@@ -273,7 +258,7 @@ public class SQLSourceHelper {
     int getRunQueryDelay() {
         return runQueryDelay;
     }
-    
+
     int getBatchSize() {
         return batchSize;
     }
@@ -281,27 +266,28 @@ public class SQLSourceHelper {
     int getMaxRows() {
         return maxRows;
     }
-    
+
     String getQuery() {
-        return query;
+        return buildQuery();
+    }
+
+    Object getIndexColumn() {
+        return checkColumn;
     }
 
     String getIndexQuery() {
-        if (columnType.toLowerCase().trim().equals("string")) {
-            return String.format("select nvl(to_char(max(%s), 'yyyy-MM-dd HH24:mi:ss'), '1900-01-01 00:00:00') as index from %s", checkColumn, table);
-        } else if (columnType.toLowerCase().trim().equals("bigint")) {
-            return String.format("select nvl(max(%s),0) from %s", checkColumn, table);
-        }
-        return "";
+        return lastValueQuery;
     }
 
     String getHibernateDialect() {
         return hibernateDialect;
     }
 
-
     String getHibernateDriver() {
         return hibernateDriver;
     }
-    
+
+    String getTableName() {
+        return table;
+    }
 }

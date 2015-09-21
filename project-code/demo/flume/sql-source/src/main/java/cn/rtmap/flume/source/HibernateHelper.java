@@ -1,6 +1,7 @@
 package cn.rtmap.flume.source;
 
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,7 +18,6 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class HibernateHelper {
-
     private static final Logger LOG = LoggerFactory.getLogger(HibernateHelper.class);
 
     private static SessionFactory factory;
@@ -31,14 +31,13 @@ public class HibernateHelper {
      * @param sqlSourceHelper Contains the configuration parameters from flume config file
      */
     public HibernateHelper(SQLSourceHelper sqlSourceHelper) {
-
         this.sqlSourceHelper = sqlSourceHelper;
 
         config = new Configuration()
                 .setProperty("hibernate.connection.url", sqlSourceHelper.getConnectionURL())
                 .setProperty("hibernate.connection.username", sqlSourceHelper.getUser())
                 .setProperty("hibernate.connection.password", sqlSourceHelper.getPassword());
-        
+
         if (sqlSourceHelper.getHibernateDialect() != null)
             config.setProperty("hibernate.dialect", sqlSourceHelper.getHibernateDialect());
         if (sqlSourceHelper.getHibernateDriver() != null)
@@ -49,7 +48,6 @@ public class HibernateHelper {
      * Connect to database using hibernate
      */
     public void establishSession() {
-
         LOG.info("Opening hibernate session");
 
         serviceRegistry = new StandardServiceRegistryBuilder()
@@ -62,7 +60,6 @@ public class HibernateHelper {
      * Close database connection
      */
     public void closeSession() {
-
         LOG.info("Closing hibernate session");
 
         session.close();
@@ -77,29 +74,30 @@ public class HibernateHelper {
      */
     @SuppressWarnings("unchecked")
     public List<List<Object>> executeQuery() {
-
-        List<List<Object>> rowsList = session
-                .createSQLQuery(sqlSourceHelper.getQuery()).setResultTransformer(Transformers.TO_LIST).list();
-                // .setFirstResult(sqlSourceHelper.getCurrentIndex())
-                // .setMaxResults(sqlSourceHelper.getMaxRows())
-                // .setResultTransformer(Transformers.TO_LIST).list();
-
-        // sqlSourceHelper.setCurrentIndex(sqlSourceHelper.getCurrentIndex()
-        //         + rowsList.size());
-
+        List<List<Object>> rowsList = session.createSQLQuery(sqlSourceHelper.getQuery()).setResultTransformer(Transformers.TO_LIST).list();
         return rowsList;
     }
 
+    @SuppressWarnings("unchecked")
+    public String GetLastRowIndex() {
+        LOG.info("debug: " + sqlSourceHelper.getIndexQuery());
+        List list = session.createSQLQuery(sqlSourceHelper.getIndexQuery()).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
+        if (list != null && list.size() > 0) {
+            Map map = (Map)list.get(0);
+            return map.get(sqlSourceHelper.getIndexColumn()).toString();
+        } else 
+            return null;
+    }
+
     public void resetConnectionAndSleep() throws InterruptedException {
-        
         long startTime = System.currentTimeMillis();
-        
+
         session.close();
         factory.close();
         establishSession();
-        
+
         long execTime = System.currentTimeMillis() - startTime;
-        
+
         if (execTime < sqlSourceHelper.getRunQueryDelay())
             Thread.sleep(sqlSourceHelper.getRunQueryDelay() - execTime);
     }

@@ -26,13 +26,13 @@ import au.com.bytecode.opencsv.CSVWriter;
  * 
  */
 public class SQLSource extends AbstractSource implements Configurable, PollableSource {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(SQLSource.class);
     protected SQLSourceHelper sqlSourceHelper;
     private SqlSourceCounter sqlSourceCounter;
     private CSVWriter csvWriter;
     private HibernateHelper hibernateHelper;
-       
+
     /**
      * Configure the source, load configuration properties and establish connection with database
      */
@@ -52,10 +52,9 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
         hibernateHelper.establishSession();
        
         /* Instantiate the CSV Writer */
-        csvWriter = new CSVWriter(new ChannelWriter());
-        
-    }  
-    
+        csvWriter = new CSVWriter(new ChannelWriter(), '\t', CSVWriter.NO_QUOTE_CHARACTER);
+    }
+
     /**
      * Process a batch of events performing SQL Queries
      */
@@ -63,24 +62,25 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
     public Status process() throws EventDeliveryException {
 
         try {
-            sqlSourceCounter.startProcess();            
-
+            sqlSourceCounter.startProcess();
             List<List<Object>> result = hibernateHelper.executeQuery();
 
-            if (!result.isEmpty())
-            {
+            if (!result.isEmpty()) {
                 csvWriter.writeAll(sqlSourceHelper.getAllRows(result));
                 csvWriter.flush();
                 sqlSourceCounter.incrementEventCount(result.size());
 
-                sqlSourceHelper.updateStatusFile();
+                String indexValue = hibernateHelper.GetLastRowIndex();
+                if (indexValue != null) {
+                    sqlSourceHelper.updateStatusFile(indexValue);
+                }
             }
 
             sqlSourceCounter.endProcess(result.size());
-
-            if (result.size() < sqlSourceHelper.getMaxRows()){
-                hibernateHelper.resetConnectionAndSleep();
-            }
+            Thread.sleep(sqlSourceHelper.getRunQueryDelay());
+            // if (result.size() < sqlSourceHelper.getMaxRows()){
+            //     hibernateHelper.resetConnectionAndSleep();
+            // }
 
             return Status.READY;
 
@@ -106,9 +106,7 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
      */
     @Override
     public void stop() {
-        
         LOG.info("Stopping sql source {} ...", getName());
-        
         try 
         {
             hibernateHelper.closeSession();
@@ -120,24 +118,28 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
             super.stop();
         }
     }
-    
+
     private class ChannelWriter extends Writer{
         private List<Event> events = new ArrayList<>();
 
         @Override
         public void write(char[] cbuf, int off, int len) throws IOException {
             Event event = new SimpleEvent();
-            
+
             String s = new String(cbuf);
+			String[] a = s.split("\t");
+			LOG.info(String.format("/////////////////////////// %s : %s", a[0], a[1]));
             event.setBody(s.substring(off, len-1).getBytes());
-            
+
             Map<String, String> headers;
             headers = new HashMap<String, String>();
+            headers.put("type", "log");
+            //headers.put("tab", getTableName);
             headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
             event.setHeaders(headers);
-            
+
             events.add(event);
-            
+
             if (events.size() >= sqlSourceHelper.getBatchSize())
                 flush();
         }
