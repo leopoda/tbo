@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
  * <tt>user: </tt> user to connect to database <p>
  * <tt>password: </tt> user password <p>
  * <tt>table: </tt> table to read from <p>
- * <tt>columns.to.select: </tt> columns to select for import data (* will import all) <p>
  * <tt>run.query.delay: </tt> delay time to execute each query to database <p>
  * <tt>status.file.path: </tt> Directory to save status file <p>
  * <tt>status.file.name: </tt> Name for status file (saves last row index processed) <p>
@@ -37,11 +36,21 @@ public class SQLSourceHelper {
 
     private File file,directory;
     private int runQueryDelay, batchSize, maxRows;
-    private String statusFilePath, statusFileName, connectionURL, table,
-    columnsToSelect, user, password, customQuery, query, hibernateDialect,
-    hibernateDriver;
+    private String statusFilePath;
+    private String statusFileName;
+    private String connectionURL;
+    private String table;
+    private String user;
+    private String password;
+    private String customQuery;
+    private String query;
+    private String hibernateDialect;
+    private String hibernateDriver;
 
-    private String currentIndex, checkColumn, columnType, lastValueQuery;
+    private String currentIndex;
+    private String checkColumn;
+    private String lastValueQuery;
+    private String initIndex;
 
     private static final String DEFAULT_STATUS_DIRECTORY = "/var/lib/flume";
     private static final int DEFAULT_QUERY_DELAY = 10000;
@@ -60,8 +69,6 @@ public class SQLSourceHelper {
         connectionURL = context.getString("connection.url");
         table = context.getString("table");
         checkColumn = context.getString("check.column.name");
-        columnType = context.getString("check.column.type");
-        columnsToSelect = context.getString("columns.to.select","*");
         runQueryDelay = context.getInteger("run.query.delay",DEFAULT_QUERY_DELAY);
         user = context.getString("user");
         password = context.getString("password");
@@ -72,6 +79,7 @@ public class SQLSourceHelper {
         hibernateDialect = context.getString("hibernate.dialect");
         hibernateDriver = context.getString("hibernate.connection.driver_class");
         lastValueQuery = context.getString("last.value.query");
+        initIndex = context.getString("check.column.initial.value");
 
         checkMandatoryProperties();
 
@@ -83,26 +91,16 @@ public class SQLSourceHelper {
     }
 
     private String buildQuery() {
-        if (customQuery == null) {
-            if (columnType.toLowerCase().trim().equals("bigint")) {
-                currentIndex = getStatusFileIndex("0");
-                String str = String.format("SELECT %s FROM %s WHERE %s > %s", columnsToSelect, table, checkColumn, currentIndex);
-                return str;
-            } else {
-                currentIndex = getStatusFileIndex("1900-01-01 00:00:00");
-                return String.format("SELECT %s FROM %s WHERE %s > '%s'", columnsToSelect, table, checkColumn, currentIndex);
-            }
-        }
-        else {
-            return String.format(customQuery, currentIndex);
-        }
+        currentIndex = getStatusFileIndex(initIndex);
+        String sql = String.format(customQuery, currentIndex);
+        LOG.info("custom sql query: {}", sql);
+        return sql;
     }
 
     private boolean isStatusFileCreated(){
-        
         return file.exists() && !file.isDirectory() ? true: false;
     }
-    
+
     private boolean isStatusDirectoryCreated() {
         return directory.exists() && !directory.isFile() ? true: false;
     }
@@ -200,7 +198,7 @@ public class SQLSourceHelper {
             throw new ConfigurationException("connection.url property not set");
         }
         if (table == null && customQuery == null){
-            throw new ConfigurationException("property table not set");
+            throw new ConfigurationException("property table or custom query not set");
         }
         if (password == null){
             throw new ConfigurationException("password property not set");

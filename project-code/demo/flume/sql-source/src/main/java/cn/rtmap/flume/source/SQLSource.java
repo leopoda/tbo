@@ -77,10 +77,11 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
             }
 
             sqlSourceCounter.endProcess(result.size());
-            Thread.sleep(sqlSourceHelper.getRunQueryDelay());
-            // if (result.size() < sqlSourceHelper.getMaxRows()){
-            //     hibernateHelper.resetConnectionAndSleep();
-            // }
+            // Thread.sleep(sqlSourceHelper.getRunQueryDelay());
+
+            if (result.size() < sqlSourceHelper.getMaxRows()){
+                hibernateHelper.resetConnectionAndSleep();
+            }
 
             return Status.READY;
 
@@ -125,19 +126,15 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
         @Override
         public void write(char[] cbuf, int off, int len) throws IOException {
             Event event = new SimpleEvent();
-
             String s = new String(cbuf);
-			String[] a = s.split("\t");
-			LOG.info(String.format("/////////////////////////// %s : %s", a[0], a[1]));
             event.setBody(s.substring(off, len-1).getBytes());
 
             Map<String, String> headers;
             headers = new HashMap<String, String>();
             headers.put("type", "log");
-            //headers.put("tab", getTableName);
             headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
-            event.setHeaders(headers);
 
+            event.setHeaders(headers);
             events.add(event);
 
             if (events.size() >= sqlSourceHelper.getBatchSize())

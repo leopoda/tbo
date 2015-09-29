@@ -2,6 +2,7 @@
 
 export FLUME_HOME=/usr/hdp/current/flume-server
 
+rm -rf /var/lib/flume/*
 rm -rf $FLUME_HOME/plugins.d/sql-source/lib/*
 cp -v target/flume-ng-sql-source-1.3-SNAPSHOT.jar $FLUME_HOME/plugins.d/sql-source/lib
 
