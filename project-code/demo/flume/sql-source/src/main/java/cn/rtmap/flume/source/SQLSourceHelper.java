@@ -48,6 +48,7 @@ public class SQLSourceHelper {
     private String hibernateDriver;
 
     private String currentIndex;
+    private String maxIndex;
     private String checkColumn;
     private String lastValueQuery;
     private String initIndex;
@@ -92,7 +93,7 @@ public class SQLSourceHelper {
 
     private String buildQuery() {
         currentIndex = getStatusFileIndex(initIndex);
-        String sql = String.format(customQuery, currentIndex);
+        String sql = String.format(customQuery, currentIndex, maxIndex);
         LOG.info("custom sql query: {}", sql);
         return sql;
     }
@@ -287,5 +288,9 @@ public class SQLSourceHelper {
 
     String getTableName() {
         return table;
+    }
+
+    void setMaxIndex(String value) {
+        maxIndex = value;
     }
 }

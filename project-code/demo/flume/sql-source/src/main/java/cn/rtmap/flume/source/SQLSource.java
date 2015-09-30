@@ -63,6 +63,10 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
 
         try {
             sqlSourceCounter.startProcess();
+
+            String maxValue = hibernateHelper.GetLastRowIndex();
+            sqlSourceHelper.setMaxIndex(maxValue);
+
             List<List<Object>> result = hibernateHelper.executeQuery();
 
             if (!result.isEmpty()) {
@@ -70,10 +74,12 @@ public class SQLSource extends AbstractSource implements Configurable, PollableS
                 csvWriter.flush();
                 sqlSourceCounter.incrementEventCount(result.size());
 
-                String indexValue = hibernateHelper.GetLastRowIndex();
-                if (indexValue != null) {
-                    sqlSourceHelper.updateStatusFile(indexValue);
-                }
+                sqlSourceHelper.updateStatusFile(maxValue);
+
+                // String indexValue = hibernateHelper.GetLastRowIndex();
+                // if (indexValue != null) {
+                //     sqlSourceHelper.updateStatusFile(indexValue);
+                // }
             }
 
             sqlSourceCounter.endProcess(result.size());
