@@ -142,8 +142,8 @@ public class SQLSourceHelper {
         try {
             currentIndex = indexValue;
             Writer writer = new FileWriter(file,false);
-            writer.write(connectionURL+"	");
-            writer.write(table+"	");
+            writer.write(connectionURL + '\t');
+            writer.write(table + '\t');
             writer.write(currentIndex + "\n");
             writer.close();
         } catch (IOException e) {
