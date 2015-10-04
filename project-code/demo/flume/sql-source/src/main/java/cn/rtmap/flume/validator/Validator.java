@@ -10,15 +10,17 @@ import org.apache.flume.interceptor.Interceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BaseValidator implements Interceptor {
-    private static final Logger LOG = LoggerFactory.getLogger(BaseValidator.class);
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Validator implements Interceptor {
+    private static final Logger LOG = LoggerFactory.getLogger(Validator.class);
 
 	// only Builder can build me.
-	// private BaseValidator() {}
+	protected Validator() {}
 	
 	@Override
 	public void initialize() {}
-  
+
   @Override
   public Event intercept(Event event) {
 
@@ -43,6 +45,8 @@ public class BaseValidator implements Interceptor {
     // }
     if (!validate(body)) {
 		LOG.error("data validation failed: {}", body);
+	} else {
+		LOG.info("data validation succeeded: {}", body);
 	}
     return event;
   }
@@ -58,17 +62,22 @@ public class BaseValidator implements Interceptor {
     @Override
     public void close() {}
 
-    public boolean validate(String data) {
-		return true;
-	}
-	
-	// public static class Builder implements Interceptor.Builder {
-	// 	@Override
-	// 	public BaseValidator build() {
-	// 		return new BaseValidator();
-	// 	}
-	// 	
-	// 	@Override
-	// 	public void configure(Context context) {}
-	// }
+    public boolean validate(Object data) {
+    	return true;
+    }
+
+	 public static class Builder implements Interceptor.Builder {
+
+	 	@Override
+	 	public Validator build() {
+	 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
+	 		Validator bean = (Validator)context.getBean("validator");
+	 		context.close();
+
+	 		return bean;
+	 	}
+
+	 	@Override
+	 	public void configure(Context context) {}
+	 }
 }
