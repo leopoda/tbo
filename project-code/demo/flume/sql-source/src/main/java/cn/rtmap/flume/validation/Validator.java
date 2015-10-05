@@ -1,4 +1,4 @@
-package cn.rtmap.flume.validator;
+package cn.rtmap.flume.validation;
 
 import java.util.List;
 import java.util.Map;
@@ -25,28 +25,12 @@ public class Validator implements Interceptor {
   public Event intercept(Event event) {
 
     Map<String, String> headers = event.getHeaders();
-
-    // // example: add / remove headers
-    // if (headers.containsKey("lice")) {
-    //   headers.put("shampoo", "antilice");
-    //   headers.remove("lice");
-    // }
-
-    // example: change body
     String body = new String(event.getBody());
-    // if (body.contains("injuries")) {
-    //   try {
-    //     event.setBody("cyborg".getBytes("UTF-8"));
-    //   } catch (java.io.UnsupportedEncodingException e) {
-    //     LOG.warn(e);
-    //     // drop event completely
-    //     return null;
-    //   }
-    // }
     if (!validate(body)) {
 		LOG.error("data validation failed: {}", body);
+		headers.put("validation", "1");
 	} else {
-		LOG.info("data validation succeeded: {}", body);
+		headers.put("validation", "0");
 	}
     return event;
   }
