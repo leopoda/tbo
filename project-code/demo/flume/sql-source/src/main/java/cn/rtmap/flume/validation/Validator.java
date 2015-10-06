@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class Validator implements Interceptor {
+public abstract class Validator implements Interceptor {
     private static final Logger LOG = LoggerFactory.getLogger(Validator.class);
 
 	// only Builder can build me.
@@ -46,9 +46,7 @@ public class Validator implements Interceptor {
     @Override
     public void close() {}
 
-    public boolean validate(Object data) {
-    	return true;
-    }
+    public abstract boolean validate(Object data);
 
 	 public static class Builder implements Interceptor.Builder {
 
