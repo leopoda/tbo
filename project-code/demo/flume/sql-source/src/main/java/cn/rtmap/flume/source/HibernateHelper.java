@@ -80,7 +80,7 @@ public class HibernateHelper {
 
     @SuppressWarnings("unchecked")
     public String GetLastRowIndex() {
-        LOG.info("debug: " + sqlSourceHelper.getIndexQuery());
+        // LOG.info("debug: " + sqlSourceHelper.getIndexQuery());
         List list = session.createSQLQuery(sqlSourceHelper.getIndexQuery()).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
         if (list != null && list.size() > 0) {
             Map map = (Map)list.get(0);

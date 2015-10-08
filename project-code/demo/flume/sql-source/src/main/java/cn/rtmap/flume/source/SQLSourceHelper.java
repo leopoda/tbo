@@ -275,7 +275,10 @@ public class SQLSourceHelper {
     }
 
     String getIndexQuery() {
-        return lastValueQuery;
+        currentIndex = getStatusFileIndex(initIndex);
+        String sql = String.format(lastValueQuery, currentIndex);
+        LOG.info("last index query: {}", sql);
+        return sql;
     }
 
     String getHibernateDialect() {
