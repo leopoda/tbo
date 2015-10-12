@@ -13,4 +13,4 @@ mkdir -p $FLUME_HOME/plugins.d/sql-source/libext
 cp -v ../../../../tools/oracle/orc-jdbc/ojdbc7.jar $FLUME_HOME/plugins.d/sql-source/libext
 cp -v target/flume-ng-sql-source-1.3-SNAPSHOT.jar $FLUME_HOME/plugins.d/sql-source/lib
 
-flume-ng agent --conf-file ./barcode.conf --name agent1 --conf $FLUME_HOME/conf -Dflume.root.logger=INFO,console
+flume-ng agent --conf-file ./lkxxb.conf --name agent3 --conf $FLUME_HOME/conf -Dflume.root.logger=INFO,console
