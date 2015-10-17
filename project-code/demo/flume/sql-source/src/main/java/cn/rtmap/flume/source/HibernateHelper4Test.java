@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 public class HibernateHelper4Test extends HibernateHelper {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HibernateHelper4Test.class);
+	private String lastRowIndex;
 
 	private SQLSourceHelper sqlSourceHelper = null;
 	public HibernateHelper4Test(SQLSourceHelper sqlSourceHelper) {
@@ -35,7 +37,7 @@ public class HibernateHelper4Test extends HibernateHelper {
 			calendar.add(Calendar.MINUTE, minuteToAdd);
 
 			Date d2 = calendar.getTime();
-			String lastRowIndex = df.format(d2);
+			lastRowIndex = df.format(d2);
 
 			LOG.info("debug - current row index: {}, last row index: {}", currentIndex, lastRowIndex);
 			return lastRowIndex;
@@ -44,5 +46,14 @@ public class HibernateHelper4Test extends HibernateHelper {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public List<List<Object>> executeQuery() {
+		List<List<Object>> rowsList = super.executeQuery();
+
+		// record the timestamp even the result is empty
+		sqlSourceHelper.updateStatusFile(lastRowIndex);
+		return rowsList;
 	}
 }
